@@ -30,7 +30,7 @@ class TaskController extends Controller
             'description' => '',
             'author' => 'Glukhov Sergey',
             'assigned' => '',
-            'created' => '',
+            'created' => '111',
             'deadline' => ''
         ]);
 

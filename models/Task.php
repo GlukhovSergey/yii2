@@ -4,6 +4,7 @@
 namespace app\models;
 
 
+use app\validators\MyValidator;
 use yii\base\Model;
 
 class Task extends Model
@@ -19,10 +20,10 @@ class Task extends Model
     public function rules()
     {
         return [
-            [['id', 'title', 'author', 'created'], 'required'],
+            [['id', 'title', 'author'], 'required'],
             ['$description', 'safe'],
             ['$assigned', 'safe'],
-            ['$created', 'myValidator'],
+            ['$created', MyValidator::class],
             ['$deadline', 'safe'],
         ];
     }
