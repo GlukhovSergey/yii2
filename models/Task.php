@@ -21,10 +21,10 @@ class Task extends Model
     {
         return [
             [['id', 'title', 'author'], 'required'],
-            ['$description', 'safe'],
-            ['$assigned', 'safe'],
-            ['$created', MyValidator::class],
-            ['$deadline', 'safe'],
+            ['description', 'safe'],
+            ['assigned', 'safe'],
+            ['created', MyValidator::class],
+            ['deadline', 'safe'],
         ];
     }
 }
