@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `task_statuses`.
  */
-class m191019_211940_create_task_statuses_table extends Migration
+class m190527_211940_create_task_statuses_table extends Migration
 {
     protected $tableName = 'task_statuses';
     /**
