@@ -55,9 +55,31 @@ class TasksController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->render('one', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    /**
+     * Create or update a single Tasks model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionSave($id = 0)
+    {
+        if ($id === 0) {
+            $model = new Tasks();
+            $model->creator_id = Yii::$app->user->isGuest ? null : Yii::$app->user->identity->getId();
+        } else {
+            $model = $this->findModel($id);
+        };
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
+        }
+
+        return $this->redirect(['one', 'id' => $model->id]);
     }
 
     /**
@@ -70,10 +92,10 @@ class TasksController extends Controller
         $model = new Tasks();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['one', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
+        return $this->render('one', [
             'model' => $model,
         ]);
     }
@@ -90,7 +112,7 @@ class TasksController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['one', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -128,12 +150,6 @@ class TasksController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
-    public function actionTask()
-    {
-        echo 'Это страница с карточкой задачи';
-        exit;
-    }
 
     public function actionTestValidate()
     {

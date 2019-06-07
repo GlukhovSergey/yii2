@@ -68,6 +68,10 @@ class TasksFilter extends Tasks
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description]);
 
+        \Yii::$app->db->cache(function () use ($dataProvider) {
+            return $dataProvider->prepare();
+        });
+
         return $dataProvider;
     }
 }
