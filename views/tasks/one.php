@@ -32,6 +32,13 @@ use \yii\helpers\ArrayHelper;
             <?=$form->field($model, 'description')
                 ->textarea()?>
         </div>
+        <? foreach ($images as $image): ?>
+            <img src="/img/small/<?= $image->filePath ?>" class="card-img-top"
+                 alt="<?= $image->filePath ?>">
+        <? endforeach; ?>
+        <div>
+            <?=$form->field($model, 'upload')->fileInput()?>
+        </div>
         <?=Html::submitButton("Сохранить",['class' => 'btn btn-success']);?>
         <?ActiveForm::end()?>
     </div>

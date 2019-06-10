@@ -6,6 +6,8 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\imagine\Image;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "tasks".
@@ -22,6 +24,30 @@ use yii\db\Expression;
  */
 class Tasks extends ActiveRecord
 {
+    /** @var  UploadedFile */
+    public $upload;
+
+    public function saveImg()
+    {
+        if ($this->validate('upload')) {
+            $filepath = \Yii::getAlias("@img/{$this->upload->name}");
+            $this->upload->saveAs($filepath);
+
+            Image::thumbnail($filepath, 100, 100)
+                ->save(\Yii::getAlias("@img/small/{$this->upload->name}"));
+
+            $modelImage = new TaskImages();
+            $modelImage->task_id = $this->id;
+            $modelImage->filePath = $this->upload->name;
+            $modelImage->save();
+        }
+    }
+
+    public function getImages()
+    {
+        return TaskImages::findAll(['task_id' => $this->id]);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -58,6 +84,8 @@ class Tasks extends ActiveRecord
             [['deadline'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 255],
+            ['upload', 'file', 'extensions' => 'jpg, png']
+
         ];
     }
 
