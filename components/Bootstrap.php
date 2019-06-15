@@ -15,6 +15,8 @@ class Bootstrap extends Component implements BootstrapInterface
 {
     public function bootstrap($app)
     {
+        $this->setLang();
+
         Event::on(Tasks::className(), Tasks::EVENT_AFTER_INSERT, function ($event) {
             //var_dump($event);
 
@@ -29,8 +31,12 @@ class Bootstrap extends Component implements BootstrapInterface
                 ->send();
 
         });
+    }
 
-
+    private function setLang(){
+        if($lang = \Yii::$app->session->get('lang'))[
+            \Yii::$app->language = $lang
+        ];
     }
 
 }

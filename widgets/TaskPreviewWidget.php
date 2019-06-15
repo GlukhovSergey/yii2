@@ -13,7 +13,6 @@ class TaskPreviewWidget extends Widget
     public function run()
     {
         return $this->render('taskPreview',
-                ['model' => $this->model,
-                'images' => $this->model->getImages()]);
+                ['model' => $this->model]);
     }
 }

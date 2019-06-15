@@ -5,6 +5,8 @@ namespace app\controllers;
 
 
 use app\models\filters\TasksFilter;
+use app\models\forms\TaskAttachmentsAddForm;
+use app\models\tables\TaskComments;
 use app\models\tables\Tasks;
 use app\models\Task;
 use Yii;
@@ -58,7 +60,9 @@ class TasksController extends Controller
     {
         return $this->render('one', [
             'model' => $this->findModel($id),
-            'images' => $this->findModel($id)->getImages(),
+            'taskCommentForm' => new TaskComments(),
+            'taskAttachmentForm' => new TaskAttachmentsAddForm(),
+            'userId' => Yii::$app->user->id,
         ]);
     }
 
@@ -78,15 +82,38 @@ class TasksController extends Controller
         };
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            $model->upload = UploadedFile::getInstance($model, 'upload');
-            $model->saveImg();
-
             return $this->redirect(['index']);
         }
 
         return $this->redirect(['one', 'id' => $model->id]);
     }
+
+
+
+    public function actionAddComment()
+    {
+        $model = new TaskComments();
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+        } else {
+            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
+        }
+        $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    public function actionAddAttachment()
+    {
+        $model = new TaskAttachmentsAddForm();
+        $model->load(\Yii::$app->request->post());
+        $model->attachment = UploadedFile::getInstance($model, 'attachment');
+        if ($model->save()) {
+            \Yii::$app->session->setFlash('success', "Файл добавлен");
+        } else {
+            \Yii::$app->session->setFlash('error', "Не удалось добавить файл");
+        }
+        $this->redirect(\Yii::$app->request->referrer);
+    }
+
 
     /**
      * Creates a new Tasks model.
@@ -175,6 +202,5 @@ class TasksController extends Controller
         var_dump($model->getErrors());
         exit;
     }
-
 
 }

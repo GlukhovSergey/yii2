@@ -27,26 +27,6 @@ class Tasks extends ActiveRecord
     /** @var  UploadedFile */
     public $upload;
 
-    public function saveImg()
-    {
-        if ($this->validate('upload')) {
-            $filepath = \Yii::getAlias("@img/{$this->upload->name}");
-            $this->upload->saveAs($filepath);
-
-            Image::thumbnail($filepath, 100, 100)
-                ->save(\Yii::getAlias("@img/small/{$this->upload->name}"));
-
-            $modelImage = new TaskImages();
-            $modelImage->task_id = $this->id;
-            $modelImage->filePath = $this->upload->name;
-            $modelImage->save();
-        }
-    }
-
-    public function getImages()
-    {
-        return TaskImages::findAll(['task_id' => $this->id]);
-    }
 
     /**
      * {@inheritdoc}
@@ -96,7 +76,7 @@ class Tasks extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => Yii::t('app', 'task_name'),
             'description' => 'Description',
             'creator_id' => 'Creator ID',
             'responsible_id' => 'Responsible ID',
@@ -119,5 +99,16 @@ class Tasks extends ActiveRecord
     {
         return $this->hasOne(Users::class, ['id' => 'responsible_id']);
     }
+
+    public function getTaskComments()
+    {
+        return $this->hasMany(TaskComments::class, ['task_id' => 'id']);
+    }
+
+    public function getTaskAttachments()
+    {
+        return $this->hasMany(TaskImages::class, ['task_id' => 'id']);
+    }
+
 
 }

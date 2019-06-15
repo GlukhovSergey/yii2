@@ -47,14 +47,17 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
+                'tasks' => 'tasks/index',
+                'task/<id>' => 'tasks/view',
+                'task/<id>/save' => 'tasks/save',
+                'tasks/add-comment' => 'tasks/add-comment',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
