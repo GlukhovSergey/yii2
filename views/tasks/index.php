@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\assets\TasksAsset;
+
+TasksAsset::register($this);
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\filters\TasksFilter */
@@ -14,9 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Новая задача', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php if(Yii::$app->user->can('TaskCreate')):?>
+        <p>
+            <?= Html::a('Новая задача', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php endif; ?>
 
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 

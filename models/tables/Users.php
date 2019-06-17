@@ -67,4 +67,16 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Tasks::className(), ['responsible_id' => 'id']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentity($id)
+    {
+        $result = Users::findOne(['id' => $id]);
+        return is_null($result) ? null : new static($result->toArray());
+
+        //return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+    }
+
 }
